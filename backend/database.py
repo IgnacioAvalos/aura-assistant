@@ -1,36 +1,58 @@
+import os
 import sqlite3
 
 
 def conectar():
 
-    conexion = sqlite3.connect("../database/aura.db")
+    ruta_base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    return conexion
+    ruta_db = os.path.join(
+        ruta_base,
+        "database",
+        "aura.db"
+    )
+
+    return sqlite3.connect(ruta_db)
 
 
-
-def crear_tablas():
+def guardar_usuario(nombre=None, objetivo=None):
 
     conexion = conectar()
-
     cursor = conexion.cursor()
 
 
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS usuario (
-
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT,
-        objetivo TEXT
-
+    cursor.execute(
+        """
+        INSERT INTO usuario (nombre, objetivo)
+        VALUES (?, ?)
+        """,
+        (nombre, objetivo)
     )
-    """)
 
 
     conexion.commit()
-
     conexion.close()
 
 
 
-crear_tablas()
+def obtener_usuario():
+
+    conexion = conectar()
+    cursor = conexion.cursor()
+
+
+    cursor.execute(
+        """
+        SELECT nombre, objetivo
+        FROM usuario
+        ORDER BY id DESC
+        LIMIT 1
+        """
+    )
+
+
+    usuario = cursor.fetchone()
+
+    conexion.close()
+
+    return usuario
