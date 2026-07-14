@@ -1,4 +1,4 @@
-from memoria import guardar_dato, obtener_dato
+from database import guardar_usuario, obtener_usuario
 
 
 print("🤖 AURA iniciada")
@@ -17,15 +17,19 @@ while True:
     mensaje_minuscula = mensaje.lower().strip()
 
 
-    # Consultar nombre (debe ir antes de "me llamo")
+    # Consultar nombre
     if "cómo me llamo" in mensaje_minuscula or "como me llamo" in mensaje_minuscula:
 
-        nombre = obtener_dato("nombre")
+        usuario = obtener_usuario()
 
-        if nombre:
-            print(f"AURA: Te llamas {nombre}.")
+        if usuario and usuario[0]:
+
+            print(f"AURA: Te llamas {usuario[0]}.")
+
         else:
+
             print("AURA: Todavía no conozco tu nombre.")
+
 
 
     # Guardar nombre
@@ -33,9 +37,10 @@ while True:
 
         nombre = mensaje.replace("me llamo", "").strip()
 
-        guardar_dato("nombre", nombre)
+        guardar_usuario(nombre=nombre)
 
         print(f"AURA: Encantada de conocerte {nombre}. Lo recordaré.")
+
 
 
     # Guardar objetivo
@@ -43,28 +48,49 @@ while True:
 
         objetivo = mensaje.replace("mi objetivo es", "").strip()
 
-        guardar_dato("objetivo_principal", objetivo)
+        usuario = obtener_usuario()
+
+        nombre = None
+
+        if usuario:
+            nombre = usuario[0]
+
+
+        guardar_usuario(
+            nombre=nombre,
+            objetivo=objetivo
+        )
+
 
         print("AURA: Perfecto. Guardé tu objetivo.")
+
 
 
     # Consultar objetivo
     elif "cuál es mi objetivo" in mensaje_minuscula or "cual es mi objetivo" in mensaje_minuscula:
 
-        objetivo = obtener_dato("objetivo_principal")
+        usuario = obtener_usuario()
 
-        if objetivo:
-            print(f"AURA: Tu objetivo principal es {objetivo}.")
+
+        if usuario and usuario[1]:
+
+            print(f"AURA: Tu objetivo es {usuario[1]}.")
+
         else:
+
             print("AURA: Todavía no tengo registrado tu objetivo.")
 
 
-    # Respuesta general
+
     else:
 
-        nombre = obtener_dato("nombre")
+        usuario = obtener_usuario()
 
-        if nombre:
-            print(f"AURA: Estoy aquí contigo, {nombre}. Sigo aprendiendo.")
+
+        if usuario and usuario[0]:
+
+            print(f"AURA: Estoy aquí contigo, {usuario[0]}. Sigo aprendiendo.")
+
         else:
+
             print("AURA: Estoy aprendiendo todavía.")
