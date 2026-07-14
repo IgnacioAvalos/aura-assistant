@@ -13,6 +13,7 @@ def analizar_mensaje(mensaje):
     if "me llamo" in texto:
 
         nombre = mensaje.replace("me llamo", "").strip()
+        nombre = nombre.capitalize()
 
         return {
             "accion": "guardar_nombre",

@@ -1,4 +1,5 @@
 from database import guardar_usuario, obtener_usuario
+from cerebro import analizar_mensaje
 
 
 print("🤖 AURA iniciada")
@@ -9,50 +10,67 @@ while True:
 
     mensaje = input("Ignacio: ")
 
+
     if mensaje.lower().strip() == "salir":
+
         print("AURA: Hasta pronto Ignacio. Seguimos construyendo.")
         break
 
 
-    mensaje_minuscula = mensaje.lower().strip()
+    resultado = analizar_mensaje(mensaje)
 
 
-    # Consultar nombre
-    if "cómo me llamo" in mensaje_minuscula or "como me llamo" in mensaje_minuscula:
-
-        usuario = obtener_usuario()
-
-        if usuario and usuario[0]:
-
-            print(f"AURA: Te llamas {usuario[0]}.")
-
-        else:
-
-            print("AURA: Todavía no conozco tu nombre.")
-
+    accion = resultado["accion"]
 
 
     # Guardar nombre
-    elif "me llamo" in mensaje_minuscula:
 
-        nombre = mensaje.replace("me llamo", "").strip()
+    if accion == "guardar_nombre":
+
+        nombre = resultado["dato"]
 
         guardar_usuario(nombre=nombre)
 
-        print(f"AURA: Encantada de conocerte {nombre}. Lo recordaré.")
+        print(
+            f"AURA: Encantada de conocerte {nombre}. Lo recordaré."
+        )
+
+
+    # Consultar nombre
+
+    elif accion == "consultar_nombre":
+
+        usuario = obtener_usuario()
+
+
+        if usuario and usuario[0]:
+
+            print(
+                f"AURA: Te llamas {usuario[0]}."
+            )
+
+        else:
+
+            print(
+                "AURA: Todavía no conozco tu nombre."
+            )
 
 
 
     # Guardar objetivo
-    elif "mi objetivo es" in mensaje_minuscula:
 
-        objetivo = mensaje.replace("mi objetivo es", "").strip()
+    elif accion == "guardar_objetivo":
+
+        objetivo = resultado["dato"]
+
 
         usuario = obtener_usuario()
 
         nombre = None
 
+
         if usuario:
+
             nombre = usuario[0]
 
 
@@ -62,25 +80,34 @@ while True:
         )
 
 
-        print("AURA: Perfecto. Guardé tu objetivo.")
+        print(
+            "AURA: Perfecto. Guardé tu objetivo."
+        )
 
 
 
     # Consultar objetivo
-    elif "cuál es mi objetivo" in mensaje_minuscula or "cual es mi objetivo" in mensaje_minuscula:
+
+    elif accion == "consultar_objetivo":
 
         usuario = obtener_usuario()
 
 
         if usuario and usuario[1]:
 
-            print(f"AURA: Tu objetivo es {usuario[1]}.")
+            print(
+                f"AURA: Tu objetivo es {usuario[1]}."
+            )
 
         else:
 
-            print("AURA: Todavía no tengo registrado tu objetivo.")
+            print(
+                "AURA: Todavía no tengo registrado tu objetivo."
+            )
 
 
+
+    # No entendido
 
     else:
 
@@ -89,8 +116,12 @@ while True:
 
         if usuario and usuario[0]:
 
-            print(f"AURA: Estoy aquí contigo, {usuario[0]}. Sigo aprendiendo.")
+            print(
+                f"AURA: Estoy aquí contigo, {usuario[0]}. Sigo aprendiendo."
+            )
 
         else:
 
-            print("AURA: Estoy aprendiendo todavía.")
+            print(
+                "AURA: Estoy aprendiendo todavía."
+            )
